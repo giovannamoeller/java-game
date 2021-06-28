@@ -5,19 +5,21 @@ import javax.swing.*;
 
 
 public class Painel extends JPanel implements Runnable {
-	static int width = 600;
-	static int height = 400;
+	static int width = 800;
+	static int height = 600;
 	static Dimension SCREEN_SIZE = new Dimension(width, height);
+
 	static int bolaDiametro = 20;
 	static int raqueteLargura = 25;
 	static int raqueteAltura = 100;
 
 	static int larguraRaquete = 10;
 	static int alturaRaquete = 90;
+
 	static int xRaquete = 5;
-	static int xRaqueteOponente = 595 - larguraRaquete;
-	static int yRaquete = 150;
-	static int yRaqueteOponente = 150;
+	static int xRaqueteOponente = 795 - larguraRaquete;
+	static int yRaquete = 255;
+	static int yRaqueteOponente = 255;
 
 	Thread gameThread;
 	Image image;
@@ -64,17 +66,30 @@ public class Painel extends JPanel implements Runnable {
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		while(true) {
+
 			long now = System.nanoTime();
 			delta += (now -lastTime)/ns;
 			lastTime = now;
 			if(delta >=1) {
+				checkCollision();
 				move();
-				//checkCollision();
 				repaint();
 				delta--;
 			}
 		}
 	}
+
+	public void checkCollision(){
+		//raquete 1
+		if(raquete.checkBorderCollision(0, 0, this.width, this.height)){
+			raquete.yVelocity = - raquete.yVelocity;
+			raquete.move();
+			raquete.yVelocity = 0;
+		}
+
+		//raquete 2
+	}
+
 	public class AL extends KeyAdapter{
 		public void keyPressed(KeyEvent e) {
 			raquete.keyPressed(e);
@@ -83,5 +98,4 @@ public class Painel extends JPanel implements Runnable {
 			raquete.keyReleased(e);
 		}
 	}
-    
 }
