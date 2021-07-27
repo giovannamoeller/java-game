@@ -16,18 +16,18 @@ public class Painel extends JPanel implements Runnable {
 	static int larguraRaquete = 10;
 	static int alturaRaquete = 90;
 
-	static int xRaquete = 5;
-	static int xRaqueteOponente = 795 - larguraRaquete;
-	static int yRaquete = 255;
-	static int yRaqueteOponente = 255;
+	static int xRaqueteP1 = 5;
+	static int xRaqueteP2 = 795 - larguraRaquete;
+	static int yRaqueteP1 = 255;
+	static int yRaqueteP2 = 255;
 
 	Thread gameThread;
 	Image image;
 	Graphics graphics;
 	Random random;
-	Raquete raquete;
-	Raquete raqueteOponente;
-	
+	Raquete raqueteP1;
+	Raquete raqueteP2;
+
 	Painel(){
 		novaRaquete();
 		this.setFocusable(true);
@@ -39,8 +39,8 @@ public class Painel extends JPanel implements Runnable {
 	}
 
 	public void novaRaquete() {
-		raquete = new Raquete(xRaquete, yRaquete, larguraRaquete, alturaRaquete, 1);
-		raqueteOponente = new Raquete(xRaqueteOponente, yRaqueteOponente, larguraRaquete, alturaRaquete, 2);
+		raqueteP1 = new Raquete(xRaqueteP1, yRaqueteP1, larguraRaquete, alturaRaquete, 1);
+		raqueteP2 = new Raquete(xRaqueteP2, yRaqueteP2, larguraRaquete, alturaRaquete, 2);
 	}
 	public void paint(Graphics g) {
 		image = createImage(getWidth(),getHeight());
@@ -49,14 +49,14 @@ public class Painel extends JPanel implements Runnable {
 		g.drawImage(image,0,0,this);
 	}
 	public void draw(Graphics g) {
-		raquete.draw(g);
-		raqueteOponente.draw(g);
+		raqueteP1.draw(g);
+		raqueteP2.draw(g);
     	Toolkit.getDefaultToolkit().sync(); // I forgot to add this line of code in the video, it helps with the animation
 	}
 
 	public void move() {
-		raquete.move();
-		raqueteOponente.move();
+		raqueteP1.move();
+		raqueteP2.move();
 	}
 	
 	public void run() {
@@ -81,21 +81,68 @@ public class Painel extends JPanel implements Runnable {
 
 	public void checkCollision(){
 		//raquete 1
-		if(raquete.checkBorderCollision(0, 0, this.width, this.height)){
-			raquete.yVelocity = - raquete.yVelocity;
-			raquete.move();
-			raquete.yVelocity = 0;
+		if(raqueteP1.checkBorderCollision(0, 0, this.width, this.height)){
+			raqueteP1.yVelocity = - raqueteP1.yVelocity;
+			raqueteP1.move();
+			raqueteP1.yVelocity = 0;
 		}
 
 		//raquete 2
+		if(raqueteP2.checkBorderCollision(0, 0, this.width, this.height)){
+			raqueteP2.yVelocity = - raqueteP2.yVelocity;
+			raqueteP2.move();
+			raqueteP2.yVelocity = 0;
+		}
 	}
 
-	public class AL extends KeyAdapter{
+	// configuracao das teclas
+	public static class keys
+	{ 
+		public static int P1UP = KeyEvent.VK_W;
+		public static int P1DOWN = KeyEvent.VK_S;
+		public static int P2UP = KeyEvent.VK_I;
+		public static int P2DOWN = KeyEvent.VK_K;
+	}
+
+	// lida com teclas
+	public class AL extends KeyAdapter
+	{
 		public void keyPressed(KeyEvent e) {
-			raquete.keyPressed(e);
+			System.out.println("pressed key");
+			// p1
+			if(e.getKeyCode() == keys.P1UP) {
+				raqueteP1.press(1);
+			}
+			if(e.getKeyCode() == keys.P1DOWN) {
+				raqueteP1.press(-1);
+			}
+			
+			// p2
+			if(e.getKeyCode() == keys.P2UP) {
+				raqueteP2.press(1);
+			}
+			if(e.getKeyCode() == keys.P2DOWN) {
+				raqueteP2.press(-1);
+			}
 		}
+
 		public void keyReleased(KeyEvent e) {
-			raquete.keyReleased(e);
+			System.out.println("released key " + e.getKeyCode());
+			// p1
+			if(e.getKeyCode() == keys.P1UP) {
+				raqueteP1.release(1);
+			}
+			if(e.getKeyCode() == keys.P1DOWN) {
+				raqueteP1.release(-1);
+			}
+			
+			// p2
+			if(e.getKeyCode() == keys.P2UP) {
+				raqueteP2.release(1);
+			}
+			if(e.getKeyCode() == keys.P2DOWN) {
+				raqueteP2.release(-1);
+			}
 		}
 	}
 }

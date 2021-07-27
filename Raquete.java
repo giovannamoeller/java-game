@@ -21,40 +21,36 @@ public class Raquete extends Rectangle {
 		this.id = id;
 	}
 	
-	public void keyPressed(KeyEvent e) {
-		
-		switch(id) {
-		case 1:
-			if(e.getKeyCode() == lastKeyPressed){
-				break;
-			}
+	public void press(int key)
+	{	
+		if(key == lastKeyPressed){
+			return;
+		}
 
-			lastKeyPressed = e.getKeyCode();
+		lastKeyPressed = key;
 
-			if(e.getKeyCode()==KeyEvent.VK_W) {
-				setYDirection(-speed);
-			}
-			if(e.getKeyCode()==KeyEvent.VK_S) {
-				setYDirection(speed);
-			}
-			break;
+		if(key == 1) {
+			setYDirection(-speed);
+		}
+		if(key == -1) {
+			setYDirection(speed);
 		}
 	}
 
-	public void keyReleased(KeyEvent e)
+	public void release(int key)
 	{
-		if(e.getKeyCode() == lastKeyPressed){
+		if(key == lastKeyPressed){
 			lastKeyPressed = 0;
 		}
 		else{
 			return;
 		}
 
-		if(e.getKeyCode()==KeyEvent.VK_W) {
+		if(key == 1) {
 			setYDirection(0);
 			System.out.println("soltou W");
 		}
-		if(e.getKeyCode()==KeyEvent.VK_S) {
+		if(key == -1) {
 			setYDirection(0);
 			System.out.println("soltou S");
 		}	
