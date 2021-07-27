@@ -3,74 +3,37 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+// BOLA QUADRADAKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+public class Bola extends Rectangle {
 
-public class Raquete extends Rectangle
-{
+    int xVelocity;
 	int yVelocity;
-	int speed = 10;
-	Color color;
-
-
-	//guarda a ultima tecla pressionada
-	//serve para operar a logica que lida com os inputs
-	//como o key event comeca a apitar um MONTE de keypress dps que vc segura por um determinado tempo
-	//esse last key pressed serve pra nao ler a mesma tecla 500 vez
-	int lastKeyPressed = 0;
+	int speed = 5;
 	
-	Raquete(int x, int y, int largura, int altura, Color color){
-		super(x, y, largura, altura);
-		this.color = color;
+	Bola(int x, int y, int raio)
+    {
+		super(x, y, raio, raio);
+        
+	}
+
+	public void setXDirection(int xDirection)
+    {
+		xVelocity = xDirection;
 	}
 	
-	public void press(int key)
-	{	
-		if(key == lastKeyPressed){
-			return;
-		}
-
-		lastKeyPressed = key;
-
-		if(key == 1) {
-			setYDirection(-speed);
-		}
-		if(key == -1) {
-			setYDirection(speed);
-		}
-	}
-
-	public void release(int key)
-	{
-		if(key == lastKeyPressed){
-			lastKeyPressed = 0;
-		}
-		else{
-			return;
-		}
-
-		if(key == 1) {
-			setYDirection(0);
-		}
-		if(key == -1) {
-			setYDirection(0);
-		}	
-	}
-
-	public void setYDirection(int yDirection) {
+	public void setYDirection(int yDirection)
+    {
 		yVelocity = yDirection;
 	}
 
 	public void move() {
+		x = x + xVelocity;
 		y = y + yVelocity;
 	}
 
 	public void draw(Graphics g)
-	{
-		try{
-			g.setColor(color);
-		}
-		catch(Exception e){
-			g.setColor(Color.white);
-		}
+    {
+        g.setColor(Color.white);
 		g.fillRect(x, y, width, height);
 	}
 

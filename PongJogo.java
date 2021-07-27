@@ -12,7 +12,7 @@ public class PongJogo extends JFrame {
 
         painel = new Painel();
         this.add(painel);
-        this.setTitle("Jogo do Pong");
+        this.setTitle("popo");
         this.setResizable(false); // não pode ajustar a janela
         this.setBackground(Color.black);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
