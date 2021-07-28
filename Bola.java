@@ -6,29 +6,28 @@ import javax.swing.*;
 // BOLA QUADRADAKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
 public class Bola extends Rectangle {
 
-    int xVelocity;
-	int yVelocity;
+    Par velocity;
 	int speed = 5;
 	
-	Bola(int x, int y, int raio)
+	Bola(Par coord, int raio)
     {
-		super(x, y, raio, raio);
-        
+		super(coord.x, coord.y, raio, raio);
+        velocity = new Par(0, 0);
 	}
 
-	public void setXDirection(int xDirection)
+	public void setXDirection(int direction)
     {
-		xVelocity = xDirection;
+		velocity.x = direction;
 	}
 	
-	public void setYDirection(int yDirection)
+	public void setYDirection(int direction)
     {
-		yVelocity = yDirection;
+		velocity.y = direction;
 	}
 
 	public void move() {
-		x = x + xVelocity;
-		y = y + yVelocity;
+		x += velocity.x;
+		y += velocity.y;
 	}
 
 	public void draw(Graphics g)
@@ -38,15 +37,15 @@ public class Bola extends Rectangle {
 	}
 
 	// checa se dois retangulos colidem
-	public boolean checkBodyCollision(int rx, int ry, int rw, int rh)
+	public boolean checkBodyCollision(Par rc, Par rd)
 	{
 		//nao colidem pq estao um do lado do outro
-		if((this.x + this.width) < rx || this.x > (rx + rw)){
+		if((this.x + this.width) < rc.x || this.x > (rc.x + rd.x)){
 			return false;
 		}
 
 		//nao colidem pq estao um em cima do outro
-		if((this.y + this.height) < ry || this.y > (ry + rh)){
+		if((this.y + this.height) < rc.y || this.y > (rc.y + rd.y)){
 			return false;
 		}
 
@@ -54,25 +53,25 @@ public class Bola extends Rectangle {
 	}
 
 	// checa se AS BORDAS DE dois retangulos colidem
-	public boolean checkBorderCollision(int rx, int ry, int rw, int rh)
+	public boolean checkBorderCollision(Par rc, Par rd)
 	{
 		//nao colidem pq estao um do lado do outro
-		if((this.x + this.width) < rx || this.x > (rx + rw)){
+		if((this.x + this.width) < rc.x || this.x > (rc.x + rd.x)){
 			return false;
 		}
 
 		//nao colidem pq estao um em cima do outro
-		if((this.y + this.height) < ry || this.y > (ry + rh)){
+		if((this.y + this.height) < rc.y || this.y > (rc.y + rd.y)){
 			return false;
 		}
 
 		//nao colidem pq um ta dentro do outro
-		if(this.x < rx && (this.x + this.width) > (rx + rw) && this.y < ry && (this.y + this.height) > (ry + rh)){
+		if(this.x < rc.x && (this.x + this.width) > (rc.x + rd.x) && this.y < rc.y && (this.y + this.height) > (rc.y + rd.y)){
 			return false;
 		}
 
 		//nao colidem pq um ta dentro do outro
-		if(this.x > rx && (this.x + this.width) < (rx + rw) && this.y > ry && (this.y + this.height) < (ry + rh)){
+		if(this.x > rc.x && (this.x + this.width) < (rc.x + rd.x) && this.y > rc.y && (this.y + this.height) < (rc.y + rd.y)){
 			return false;
 		}
 

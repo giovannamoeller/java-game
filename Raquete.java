@@ -17,8 +17,9 @@ public class Raquete extends Rectangle
 	//esse last key pressed serve pra nao ler a mesma tecla 500 vez
 	int lastKeyPressed = 0;
 	
-	Raquete(int x, int y, int largura, int altura, Color color){
-		super(x, y, largura, altura);
+	Raquete(Par coord, Par dim, Color color)
+	{
+		super(coord.x, coord.y, dim.x, dim.y);
 		this.color = color;
 	}
 	
@@ -60,7 +61,7 @@ public class Raquete extends Rectangle
 	}
 
 	public void move() {
-		y = y + yVelocity;
+		y += yVelocity;
 	}
 
 	public void draw(Graphics g)
@@ -75,15 +76,15 @@ public class Raquete extends Rectangle
 	}
 
 	// checa se dois retangulos colidem
-	public boolean checkBodyCollision(int rx, int ry, int rw, int rh)
+	public boolean checkBodyCollision(Par rc, Par rd)
 	{
 		//nao colidem pq estao um do lado do outro
-		if((this.x + this.width) < rx || this.x > (rx + rw)){
+		if((this.x + this.width) < rc.x || this.x > (rc.x + rd.x)){
 			return false;
 		}
 
 		//nao colidem pq estao um em cima do outro
-		if((this.y + this.height) < ry || this.y > (ry + rh)){
+		if((this.y + this.height) < rc.y || this.y > (rc.y + rd.y)){
 			return false;
 		}
 
@@ -91,25 +92,25 @@ public class Raquete extends Rectangle
 	}
 
 	// checa se AS BORDAS DE dois retangulos colidem
-	public boolean checkBorderCollision(int rx, int ry, int rw, int rh)
+	public boolean checkBorderCollision(Par rc, Par rd)
 	{
 		//nao colidem pq estao um do lado do outro
-		if((this.x + this.width) < rx || this.x > (rx + rw)){
+		if((this.x + this.width) < rc.x || this.x > (rc.x + rd.x)){
 			return false;
 		}
 
 		//nao colidem pq estao um em cima do outro
-		if((this.y + this.height) < ry || this.y > (ry + rh)){
+		if((this.y + this.height) < rc.y || this.y > (rc.y + rd.y)){
 			return false;
 		}
 
 		//nao colidem pq um ta dentro do outro
-		if(this.x < rx && (this.x + this.width) > (rx + rw) && this.y < ry && (this.y + this.height) > (ry + rh)){
+		if(this.x < rc.x && (this.x + this.width) > (rc.x + rd.x) && this.y < rc.y && (this.y + this.height) > (rc.y + rd.y)){
 			return false;
 		}
 
 		//nao colidem pq um ta dentro do outro
-		if(this.x > rx && (this.x + this.width) < (rx + rw) && this.y > ry && (this.y + this.height) < (ry + rh)){
+		if(this.x > rc.x && (this.x + this.width) < (rc.x + rd.x) && this.y > rc.y && (this.y + this.height) < (rc.y + rd.y)){
 			return false;
 		}
 

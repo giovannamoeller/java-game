@@ -8,19 +8,22 @@ public class Painel extends JPanel implements Runnable
 {
 	static int width = 800;
 	static int height = 600;
-	static Dimension SCREEN_SIZE = new Dimension(width, height);
+	static Par dim = new Par(800, 600);
+	static Dimension SCREEN_SIZE = new Dimension(dim.x, dim.y);
 
 	static int bolaRaio = 10;
-	static int raqueteLargura = 25;
-	static int raqueteAltura = 100;
+	static Par coordBola = new Par((dim.x / 2) - bolaRaio, (dim.y / 2) - bolaRaio);
 
 	static int larguraRaquete = 10;
 	static int alturaRaquete = 90;
+	static Par dimRaquete = new Par(10, 90);
 
 	static int xRaqueteP1 = 5;
-	static int xRaqueteP2 = 795 - larguraRaquete;
-	static int yRaqueteP1 = 255;
 	static int yRaqueteP2 = 255;
+	static Par coordP1 = new Par(5, (dim.y - dimRaquete.y) / 2);
+	static int xRaqueteP2 = dim.x - (5 + dimRaquete.x);
+	static int yRaqueteP1 = 255;
+	static Par coordP2 = new Par(dim.x - (5 + dimRaquete.x), (dim.y - dimRaquete.y) / 2);
 
 	Thread gameThread;
 	Image image;
@@ -36,7 +39,7 @@ public class Painel extends JPanel implements Runnable
 		this.addKeyListener(new AL());
 		this.setPreferredSize(SCREEN_SIZE);
 
-		bola = new Bola((width / 2) - bolaRaio, (height / 2) - bolaRaio, bolaRaio);
+		bola = new Bola(coordBola, bolaRaio);
 		
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -44,8 +47,8 @@ public class Painel extends JPanel implements Runnable
 
 	public void novaRaquete()
 	{
-		raqueteP1 = new Raquete(xRaqueteP1, yRaqueteP1, larguraRaquete, alturaRaquete, Color.blue);
-		raqueteP2 = new Raquete(xRaqueteP2, yRaqueteP2, larguraRaquete, alturaRaquete, Color.red);
+		raqueteP1 = new Raquete(coordP1, dimRaquete, Color.blue);
+		raqueteP2 = new Raquete(coordP2, dimRaquete, Color.red);
 	}
 
 	public void paint(Graphics g)
@@ -80,9 +83,9 @@ public class Painel extends JPanel implements Runnable
 		while(true) {
 
 			long now = System.nanoTime();
-			delta += (now -lastTime)/ns;
+			delta += (now - lastTime)/ns;
 			lastTime = now;
-			if(delta >=1) {
+			if(delta >= 1) {
 				checkCollision();
 				move();
 				repaint();
@@ -92,16 +95,17 @@ public class Painel extends JPanel implements Runnable
 	}
 
 	public void checkCollision(){
+		Par zero = new Par(0, 0);
 		//raquete 1
-		if(raqueteP1.checkBorderCollision(0, 0, this.width, this.height)){
-			raqueteP1.yVelocity = - raqueteP1.yVelocity;
+		if(raqueteP1.checkBorderCollision(zero, dim)){
+			raqueteP1.yVelocity *= -1;
 			raqueteP1.move();
 			raqueteP1.yVelocity = 0;
 		}
 
 		//raquete 2
-		if(raqueteP2.checkBorderCollision(0, 0, this.width, this.height)){
-			raqueteP2.yVelocity = - raqueteP2.yVelocity;
+		if(raqueteP2.checkBorderCollision(zero, dim)){
+			raqueteP2.yVelocity *= -1 ;
 			raqueteP2.move();
 			raqueteP2.yVelocity = 0;
 		}
