@@ -9,22 +9,41 @@ public class Painel extends JPanel implements Runnable
 	static Par dim = new Par(800, 600);
 	static Dimension SCREEN_SIZE = new Dimension(dim.x, dim.y);
 
-	int bolaNoColissionFrames = 0;
 	static int bolaRaio = 10;
 	static int bolaSpread = 90;
 	static Par coordBola = new Par((dim.x / 2) - bolaRaio, (dim.y / 2) - bolaRaio);
-
+	
 	static Par dimRaquete = new Par(10, 90);
 	static int paddingRaquete = 5;
 	static Par coordP1 = new Par(paddingRaquete, (dim.y - dimRaquete.y) / 2);
 	static Par coordP2 = new Par(dim.x - (paddingRaquete + dimRaquete.x), (dim.y - dimRaquete.y) / 2);
+	
+	static int strokeScore = 8;
+	static Par dimScore = new Par(3 * strokeScore, 5 * strokeScore);
+	static Par coordScoreP1 = new Par((dim.x / 4) - (dimScore.x / 2), (dim.y / 4) - (dimScore.y / 2));
+	static Par coordScoreP2 = new Par((3 * dim.x / 4) - (dimScore.x / 2), (dim.y / 4) - (dimScore.y / 2));
 
+	static int widthLinha = 6;
+	static int widthBorda = 6;
+	static Par coordLinha = new Par((dim.x - widthLinha) / 2, 0);
+	static Par dimLinha = new Par(widthLinha, dim.y);
+
+	int timeoutFrames = 0;
+	int bolaNoColissionFrames = 0;
+	boolean stop = false;
+	Par score = new Par(0, 0);
+
+	// UTIL
 	Thread gameThread;
 	Image image;
 	Graphics graphics;
 	Random random;
+	// ELEMS DO JOGO
 	Bola bola;
 	Raquete raqueteP1, raqueteP2;
+	// UI
+	UIRect linha, borda1, borda2;
+	UINumber scoreP1, scoreP2;
 
 	Painel()
 	{
@@ -35,7 +54,13 @@ public class Painel extends JPanel implements Runnable
 
 		bola = new Bola(coordBola, bolaRaio);
 		initBola();
-		
+
+		linha = new UIRect(coordLinha.x, coordLinha.y, dimLinha.x, dimLinha.y, Color.lightGray);
+		borda1 = new UIRect(0, 0, dim.x, widthBorda, Color.lightGray);
+		borda2 = new UIRect(0, dim.y - widthBorda, dim.x, widthBorda, Color.lightGray);
+		scoreP1 = new UINumber(coordScoreP1.x, coordScoreP1.y, dimScore.x, dimScore.y, strokeScore, Color.lightGray);
+		scoreP2 = new UINumber(coordScoreP2.x, coordScoreP2.y, dimScore.x, dimScore.y, strokeScore, Color.lightGray);
+
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
@@ -51,6 +76,7 @@ public class Painel extends JPanel implements Runnable
 		bola.generateRandomVelocity(bolaSpread);
 		bola.x = coordBola.x;
 		bola.y = coordBola.y;
+		timeoutFrames = 60 * 1;
 	}
 
 	public void paint(Graphics g)
@@ -63,6 +89,11 @@ public class Painel extends JPanel implements Runnable
 
 	public void draw(Graphics g)
 	{
+		linha.draw(g);
+		borda1.draw(g);
+		borda2.draw(g);
+		scoreP1.draw(g, score.x);
+		scoreP2.draw(g, score.y);
 		raqueteP1.draw(g);
 		raqueteP2.draw(g);
 		bola.draw(g);
@@ -73,7 +104,9 @@ public class Painel extends JPanel implements Runnable
 	{
 		raqueteP1.move();
 		raqueteP2.move();
-		bola.move();
+		if(timeoutFrames == 0){
+			bola.move();
+		}
 	}
 	
 	public void run() {
@@ -87,11 +120,17 @@ public class Painel extends JPanel implements Runnable
 			delta += (now - lastTime)/ns;
 			lastTime = now;
 			if(delta >= 1) {
+				//CONTADOR
+				delta--;
+				
+				// CONTADORES
+				bolaNoColissionFrames -= (bolaNoColissionFrames == 0) ? 0 : 1;
+				timeoutFrames -= (timeoutFrames == 0) ? 0 : 1;
+								
+				// CICLO PRINCIPAL
 				checkCollision();
 				move();
 				repaint();
-				bolaNoColissionFrames -= (bolaNoColissionFrames == 0) ? 0 : 1;
-				delta--;
 			}
 		}
 	}
@@ -127,12 +166,12 @@ public class Painel extends JPanel implements Runnable
 
 		// bola -> gol P1
 		if(bola.checkBodyCollision(new Par(0, 0), new Par(0, this.dim.y))){
-			System.out.println("GOL ENOIS");
+			score.y++;
 			initBola();
 		}
 		// bola -> gol P2
 		if(bola.checkBodyCollision(new Par(this.dim.x, 0), new Par(0, this.dim.y))){
-			System.out.println("GOL ENOIS");
+			score.x++;
 			initBola();
 		}
 	}
