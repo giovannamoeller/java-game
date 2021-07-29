@@ -4,10 +4,10 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class PongJogo extends JFrame {
-
-    PongJogo() {
-
+public class PongJogo extends JFrame
+{
+    PongJogo()
+    {
         Painel painel;
 
         painel = new Painel();
@@ -22,7 +22,8 @@ public class PongJogo extends JFrame {
     
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         new PongJogo();
     }
 }

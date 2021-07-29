@@ -23,6 +23,9 @@ public class Raquete extends Rectangle
 		this.color = color;
 	}
 	
+	public Par getCoords() { return new Par(this.x, this.y); }
+	public Par getDim() { return new Par(this.width, this.height); }
+
 	public void press(int key)
 	{	
 		if(key == lastKeyPressed){
@@ -117,3 +120,10 @@ public class Raquete extends Rectangle
 		return true;	
 	}
 }
+
+
+// 180 90
+// 120 120
+// 90 135
+// 60 150
+
