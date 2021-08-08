@@ -3,6 +3,8 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+// W e S para movimentar esquerda
+// O e K para movimentar direita
 
 public class PongJogo extends JFrame
 {
@@ -12,7 +14,7 @@ public class PongJogo extends JFrame
 
         painel = new Painel();
         this.add(painel);
-        this.setTitle("popo");
+        this.setTitle("Jogo Pong");
         this.setResizable(false); // não pode ajustar a janela
         this.setBackground(Color.black);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

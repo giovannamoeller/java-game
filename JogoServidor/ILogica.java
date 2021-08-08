@@ -1,0 +1,3 @@
+interface ILogica {
+  void executa();
+} 
